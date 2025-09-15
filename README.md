@@ -40,6 +40,10 @@ void draw() {
       h++;
       if (count > 0) count--;
       if (count % 1 == 4 && stage > 20) stage--;
+      
+      if (count <= 0) {
+        stage = 0;
+      }
     }
   }
 
@@ -94,4 +98,4 @@ void touchMoved() {
 
 void touchEnded() {
   isTouching = false;
-} 
+}
