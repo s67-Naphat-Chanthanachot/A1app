@@ -7,6 +7,7 @@ int anime = 0;
 
 int touchX, touchY;
 boolean isTouching = false;
+boolean gameOver = false;
 
 void setup() {
   fullScreen(); 
@@ -40,26 +41,21 @@ void draw() {
       h++;
       if (count > 0) count--;
       if (count % 1 == 4 && stage > 20) stage--;
-      
-      if (count <= 0) {
-        stage = 0;
-      }
+      if (count <= 0) gameOver = true;
     }
   }
 
   if (d < 150 && stage > 0) {
     if (px < x) x += stage;
     else x -= stage;
-
     if (py < y) y += stage;
     else y -= stage;
-
     x = constrain(x, 50, width - 50);
     y = constrain(y, 50, height - 50);
   }
 
   noStroke();
-  fill(255, 100, 150, 200);
+  fill(255);
   ellipse(x, y, currentsize, currentsize);
 
   if (isTouching) {
@@ -71,7 +67,7 @@ void draw() {
   fill(255);
   textSize(30);
 
-  if (stage > 0) {
+  if (!gameOver) {
     text("score: " + count, 20, 40);
     text("miss: " + h, 20, 70);
     text("speed: " + stage, 20, 100);
@@ -82,6 +78,11 @@ void draw() {
     fill(255);
     textSize(35);
     text("last score: " + count, width / 2 - 120, height / 2 + 60);
+    fill(0, 255, 0);
+    rect(width / 2 - 100, height / 2 + 100, 200, 60);
+    fill(0);
+    textSize(30);
+    text("RESTART", width / 2 - 60, height / 2 + 140);
   }
 }
 
@@ -89,6 +90,12 @@ void touchStarted() {
   isTouching = true;
   touchX = mouseX;  
   touchY = mouseY;
+  if (gameOver) {
+    if (mouseX > width / 2 - 100 && mouseX < width / 2 + 100 &&
+        mouseY > height / 2 + 100 && mouseY < height / 2 + 160) {
+      resetGame();
+    }
+  }
 }
 
 void touchMoved() {
@@ -98,4 +105,15 @@ void touchMoved() {
 
 void touchEnded() {
   isTouching = false;
+}
+
+void resetGame() {
+  x = int(random(100, width - 100));
+  y = int(random(100, height - 100));
+  w = 100;
+  h = 0;
+  count = 0;
+  stage = 6;
+  anime = 0;
+  gameOver = false;
 }
